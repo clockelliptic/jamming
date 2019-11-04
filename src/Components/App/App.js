@@ -1,9 +1,9 @@
 import React, { Component } from "react";
-import * as $ from "jquery";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
-import hash from "./hash";
-import Player from "./Player";
-import logo from "./logo.svg";
+import hash from "../../util/hash";
+import Player from "../Player/Player";
+import Timer from "../Timer/Timer"
+import logo from "../../logo.svg";
 import "./App.css";
 
 var SpotifyWebApi = require('spotify-web-api-js');
@@ -13,6 +13,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
+      token: null,
       item: {
         album: {
           images: [{ url: "" }]
@@ -33,7 +34,7 @@ class App extends Component {
       spotifyApi.setAccessToken(_token);
       spotifyApi.getMyCurrentPlayingTrack((err, data) => {
         if (err) console.error(err);
-        else if (data) this.setState({item: data.item, is_playing: data.is_playing, progress_ms: data.progress_ms})
+        else if (data) this.setState({token: _token, item: data.item, is_playing: data.is_playing, progress_ms: data.progress_ms})
       })
     }
   }
@@ -65,18 +66,22 @@ class App extends Component {
               Login to Spotify
             </a>
           )}
+
+                <div>
+                  <a href="#" onClick={() => {spotifyApi.pause(null, (err, succ) => {if(err){console.error(err)} else {console.log(succ)}})}}>Pause</a>
+                  <br />
+                  <a href="#" onClick={() => {spotifyApi.play(null, (err, succ) => {if(err){console.error(err)} else {console.log(succ)}})}}>Play</a>
+                </div>
+
           {
             (spotifyApi.getAccessToken() && this.state.progress_ms) &&
             <Player
               item={this.state.item}
               is_playing={this.state.is_playing}
               progress_ms={this.state.progress_ms}
+              onTick={this.getNowPlaying.bind(this)}
             />
           }
-          {this.state.progress_ms}
-          <button onClick={this.getNowPlaying.bind(this)}>
-            Check Now Playing
-          </button>
         </header>
       </div>
     );
