@@ -1,0 +1,16 @@
+{
+    "title":"Jamming - Spotify Player",
+    "description":"Small Spotify player that uses Spotify Auth API to view a user's currently playing track.",
+    "tags":{
+       "languages":[
+          "javascript"
+       ],
+       "tooling":[
+          "react"
+       ],
+       "keywords":[
+          "spotify api", "auth tokens"
+       ]
+    },
+    "n_images":3
+ }
